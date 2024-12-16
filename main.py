@@ -1,23 +1,20 @@
 import requests
 import time
 import base64
-
-# Ваш IAM-токен и Catalog ID
-iam_token = "t1.9euelZqZiprPz5mdkpqdysrMl8qSy-3rnpWal5mVzonMl8yNk4yPmMiJkcbl8_d7dX9E-e9rDD9W_t3z9zskfUT572sMP1b-zef1656VmsmVnJfJzZeKzJqNkZyXyZiJ7_zN5_XrnpWax5XJmZPOxo2ZzpSPk8nKipvv_cXrnpWayZWcl8nNl4rMmo2RnJfJmIk.6MQkUaFdDZaFyHAJcIMwtDmJ4Vb28V0eVYKTd0BUwC1PquMj-gRUNdGLLx03UY6aTGZ9g8NCcVK2qBbTgUyiAA"
-catalog_id = "b1g35v6315951u23335m"
+import config as cfg  # Импортируем конфигурацию из config.py
 
 # URL для асинхронной генерации изображения
-url = "https://llm.api.cloud.yandex.net/foundationModels/v1/imageGenerationAsync"
+url = cfg.url_1  # Загружаем URL из config.py
 
 # Заголовки
 headers = {
-    "Authorization": f"Bearer {iam_token}",
+    "Authorization": f"Bearer {cfg.iam_token}",  # Загружаем IAM-токен из config.py
     "Content-Type": "application/json"
 }
 
 # Данные для запроса
 data = {
-    "modelUri": f"art://{catalog_id}/yandex-art/latest",
+    "modelUri": f"art://{cfg.catalog_id}/yandex-art/latest",  # Загружаем catalog_id из config.py
     "generationOptions": {
         "seed": 1863,
         "aspectRatio": {
@@ -26,11 +23,11 @@ data = {
         }
     },
     "messages": [
-    {
-        "weight": 1,
-        "text": """Автономная система хранения одежды GARDEROBOT: электроприводной конвейер с ячейками для хранения и выдачи спецодежды и личных вещей. Эффективная организация хранения для вахтовиков и крупных объектов: экономия времени, автоматическое управление, точная идентификация, минимизация ошибок, гигиеничность и комфорт. Изображение: HD full wallpaper, четкий фокус, сложные детали, глубина кадра."""
-    }
-]
+        {
+            "weight": 1,
+            "text": """Автономная система хранения одежды GARDEROBOT: электроприводной конвейер с ячейками для хранения и выдачи спецодежды и личных вещей. Эффективная организация хранения для вахтовиков и крупных объектов: экономия времени, автоматическое управление, точная идентификация, минимизация ошибок, гигиеничность и комфорт. Изображение: HD full wallpaper, четкий фокус, сложные детали, глубина кадра."""
+        }
+    ]
 }
 
 # Отправка POST-запроса
@@ -45,7 +42,7 @@ if response.status_code == 200:
     time.sleep(10)  # Пауза для обработки
 
     # URL для получения результата по ID операции
-    result_url = f"https://llm.api.cloud.yandex.net/operations/{request_id}"
+    result_url = f"{cfg.url_2}/{request_id}"  # Используем URL для операций из config.py
 
     # Повторный GET-запрос для получения изображения
     result_response = requests.get(result_url, headers=headers)
